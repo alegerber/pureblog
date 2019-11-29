@@ -2,17 +2,31 @@
 
 namespace App\Controller;
 
-use Core\JsonResponse;
+use Core\Response;
 
 class IndexController
 {
     /**
      * ROUTE: /
      *
-     * @return JsonResponse
+     * @return Response
      */
-    public function index(): JsonResponse
+    public function index(): Response
     {
-        return new JsonResponse(['test' => 'test']);
+        $html = '
+            <!DOCTYPE html>
+            <html lang="de">
+            <head>
+                <meta charset="UTF-8">
+                <title>Home</title>
+                <link rel="stylesheet" type="text/css" href="css/base.css">
+                <script type="text/javascript" src="js/base.js"></script>
+            </head>
+            <body>
+            </body>
+            </html>
+        ';
+
+        return new Response($html);
     }
 }

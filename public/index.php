@@ -1,0 +1,1 @@
+require_once '../App/config/Bootstrap.php';
