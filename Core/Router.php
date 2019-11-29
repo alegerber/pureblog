@@ -2,9 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Core;
-
-use http\Exception\BadUrlException;
+namespace Core;
 
 class Router
 {
@@ -120,7 +118,7 @@ class Router
             if (null !== $params = $this->match($requestUri)) {
                 $controller = explode('::', $params['controller']);
             } else {
-                throw new BadUrlException('route not found');
+                throw new \BadFunctionCallException('route not found');
             }
         }
 
