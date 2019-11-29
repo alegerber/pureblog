@@ -2,29 +2,17 @@
 
 namespace App\Controller;
 
-use App\Core\TwigEnvironment;
-use App\Core\Response;
+use Core\JsonResponse;
 
 class IndexController
 {
     /**
      * ROUTE: /
      *
-     * @param TwigEnvironment $twigEnvironment
-     * @return Response
-     * @throws \Twig\Error\LoaderError
-     * @throws \Twig\Error\RuntimeError
-     * @throws \Twig\Error\SyntaxError
+     * @return JsonResponse
      */
-    public function index(TwigEnvironment $twigEnvironment): Response
+    public function index(): JsonResponse
     {
-        return new Response(
-            $twigEnvironment->render(
-                'home.html.twig',
-                [
-                    'home' => 'Welcome to Blog'
-                ]
-            )
-        );
+        return new JsonResponse(['test' => 'test']);
     }
 }
