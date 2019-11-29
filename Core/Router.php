@@ -111,10 +111,18 @@ class Router
 
                 $controller[self::CONTROLLER_INDEX] = ucfirst($unformattedRoute[self::CONTROLLER_INDEX]) . 'Controller';
 
+                if (!class_exists($controller[self::CONTROLLER_INDEX])) {
+                    throw new \BadFunctionCallException('class not found');
+                }
+
                 if (self::CONTROLLER_INDEX === $unformattedRoute) {
                     $controller[self::ACTION_INDEX] = self::DEFAULT_ACTION;
                 } else {
                     $controller[self::ACTION_INDEX] = $unformattedRoute[self::ACTION_INDEX];
+                }
+
+                if (!method_exists($controller[self::CONTROLLER_INDEX], $controller[self::ACTION_INDEX])) {
+                    throw new \BadFunctionCallException('method not found');
                 }
             }
         } else if (null !== $params = $this->match($requestUri)) {
