@@ -25,7 +25,7 @@ class Router
     /**
      * @var bool
      */
-    private $autoRouting;
+    private $autoRouting = false;
 
     /**
      * gets the instance via lazy initialization (created on first usage)
@@ -38,7 +38,10 @@ class Router
         if (null === static::$instance) {
             static::$instance = new static();
         }
-        static::$instance->setAutoRouting($autoRouting);
+
+        if ($autoRouting) {
+            static::$instance->setAutoRouting($autoRouting);
+        }
 
         return static::$instance;
     }
