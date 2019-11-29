@@ -3,7 +3,7 @@
 namespace App\Repository;
 
 use App\Core\Database;
-use App\Models\Comment;
+use App\Model\Comment;
 
 class CommentRepository extends Repository
 {

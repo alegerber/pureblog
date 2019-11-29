@@ -3,7 +3,7 @@
 namespace App\Repository;
 
 use App\Core\Database;
-use App\Models\Post;
+use App\Model\Post;
 
 class PostRepository extends Repository
 {

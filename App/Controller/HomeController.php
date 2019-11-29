@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace App\Controllers;
+namespace App\Controller;
 
 use App\Core\TwigEnvironment;
 use App\Core\Response;

@@ -3,7 +3,7 @@
 namespace App\Repository;
 
 use App\Core\Database;
-use App\Models\Author;
+use App\Model\Author;
 
 class AuthorRepository extends Repository
 {

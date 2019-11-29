@@ -1,11 +1,11 @@
 <?php declare(strict_types=1);
 
-namespace App\Controllers;
+namespace App\Controller;
 
 use App\Core\Router;
 use App\Core\TwigEnvironment;
 use App\Core\Response;
-use App\Models\Post;
+use App\Model\Post;
 use App\Repository\PostRepository;
 
 class PostController
