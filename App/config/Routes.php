@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 require __DIR__ . '/../../Core/Router.php';
 
-$router = App\Core\Router::getInstance(true);
+$router = Core\Router::getInstance(true);
 
 //$router->add('/', ['controller' => 'IndexController::index', 'method' => 'GET']);
 //$router->add('/posts', ['controller' => 'PostController::index', 'method' => 'GET']);
