@@ -1,0 +1,164 @@
+<?php declare(strict_types=1);
+
+namespace App\Repository;
+
+use App\Core\Database;
+use App\Models\Comment;
+
+class CommentRepository extends Repository
+{
+    /**
+     * {@inheritDoc}
+     */
+    public function find(int $id): Comment
+    {
+        $database = Database::getInstance();
+
+        try {
+            $statement = $database->prepare('SELECT * FROM `comment` WHERE `id` = :id');
+            $statement->execute([':id' => $id]);
+            $row = $statement->fetch();
+
+            $comment = new Comment();
+            $comment->setAuthor($row['author']);
+            $comment->setAuthorEmail($row['author_email']);
+            $comment->setBody($row['body']);
+
+            return $comment;
+        } catch (\PDOException $exception) {
+            return null;
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function findAll(): array
+    {
+        $database = Database::getInstance();
+
+        try {
+            $statement = $database->query('SELECT * FROM `comment`');
+
+            $comments = [];
+
+            foreach ($statement->fetchAll() as $row){
+                $comment = new Comment();
+                $comment->setAuthor($row['author']);
+                $comment->setAuthorEmail($row['author_email']);
+                $comment->setBody($row['body']);
+                $comments[] = $comment;
+            }
+
+            return $comments;
+
+        } catch (\PDOException $exception) {
+            return null;
+        }
+    }
+
+    public function findById(array $ids): array
+    {
+        $database = Database::getInstance();
+
+        try {
+            $statement = $database->query('SELECT * FROM `comment`');
+
+            $comments = [];
+
+            foreach ($statement->fetchAll() as $row){
+                $comment = new Comment();
+                $comment->setAuthor($row['author']);
+                $comment->setAuthorEmail($row['author_email']);
+                $comment->setBody($row['body']);
+                $comments[] = $comment;
+            }
+
+            return $comments;
+        } catch (\PDOException $exception) {
+            return null;
+        }
+    }
+
+    /**
+     * @param Comment $comment
+     * @return array
+     */
+    public function new(Comment $comment): array
+    {
+        $database = Database::getInstance();
+
+        $database->beginTransaction();
+
+        try {
+            $statement = $database->prepare(
+                'INSERT INTO `comment` (`author`, `author_email`, `body`) VALUES (:author, :author_email, :body)'
+            );
+
+            $statement->execute([
+                ':author' => $comment->getAuthor(),
+                ':author_email' => $comment->getAuthorEmail(),
+                ':body' => $comment->getBody()
+            ]);
+
+            $database->commit();
+
+            return $statement->fetchAll();
+        } catch (\PDOException $exception) {
+            $database->rollBack();
+            return null;
+        }
+    }
+
+    /**
+     * @param Comment $comment
+     * @return array
+     */
+    public function update(Comment $comment): array
+    {
+        $database = Database::getInstance();
+
+            $statement = $database->prepare(
+                'UPDATE `comment` SET `author` = :author, `author_email` = :author_email, `body` = :body WHERE `id` = :id'
+            );
+
+            $statement->execute([
+                ':author' => $comment->getAuthor(),
+                ':author_email' => $comment->getAuthorEmail(),
+                ':body' => $comment->getBody(),
+                ':id' => $comment->getId()
+            ]);
+
+            $database->commit();
+
+            return $statement->fetchAll();
+    }
+
+    /**
+     * @param Comment $comment
+     * @return array
+     */
+    public function delete(Comment $comment): array
+    {
+        $database = Database::getInstance();
+
+        $database->beginTransaction();
+
+        try {
+            $statement = $database->prepare(
+                'DELETE FROM `comment` WHERE `id` = :id'
+            );
+
+            $statement->execute([
+                ':id' => $comment->getId()
+            ]);
+
+            $database->commit();
+
+            return $statement->fetchAll();
+        } catch (\PDOException $exception){
+            $database->rollBack();
+            return null;
+        }
+    }
+}
