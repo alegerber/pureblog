@@ -5,7 +5,7 @@ namespace App\Controller;
 use App\Core\TwigEnvironment;
 use App\Core\Response;
 
-class HomeController
+class IndexController
 {
     /**
      * ROUTE: /

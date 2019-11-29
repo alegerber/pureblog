@@ -4,24 +4,18 @@ declare(strict_types=1);
 
 namespace App\Core;
 
+use http\Exception\BadUrlException;
+
 class Router
 {
+
+    private const CONTROLLER_INDEX = 0;
+    private const ACTION_INDEX     = 1;
+
     /**
      * @var Router
      */
     private static $instance;
-
-    /**
-     * gets the instance via lazy initialization (created on first usage)
-     */
-    public static function getInstance(): self
-    {
-        if (null === static::$instance) {
-            static::$instance = new static();
-        }
-
-        return static::$instance;
-    }
 
     /**
      * @var array $routes
@@ -29,11 +23,50 @@ class Router
     private $routes = [];
 
     /**
+     * @var bool
+     */
+    private $autoRouting;
+
+    /**
+     * gets the instance via lazy initialization (created on first usage)
+     *
+     * @param bool $autoRouting
+     * @return self
+     */
+    public static function getInstance(bool $autoRouting): self
+    {
+        if (null === static::$instance) {
+            static::$instance = new static();
+        }
+        static::$instance->setAutoRouting($autoRouting);
+
+        return static::$instance;
+    }
+
+    /**
+     * @param bool $autoRouting
+     */
+    public function setAutoRouting(bool $autoRouting): void
+    {
+        if (!$autoRouting) {
+            throw new \BadFunctionCallException('auto routing is enabled, you can\'t disable it');
+        }
+
+        if (!$this->autoRouting) {
+            $this->autoRouting = $autoRouting;
+        }
+    }
+
+    /**
      * @param $route
      * @param $params
      */
     public function add(string $route, array $params): void
     {
+        if ($this->autoRouting) {
+            throw new \BadFunctionCallException('auto routing is enabled, you can\'t add a route');
+        }
+
         $this->routes[$route] = $params;
     }
 
@@ -64,18 +97,34 @@ class Router
      */
     public function callController(string $requestUri): void
     {
-        if(null !== $params = $this->match($requestUri)){
-            $controller = \explode('::', $params['controller']);
+        $controller = [];
 
-            $className = '\\App\\Controllers\\' . $controller[0];
-            $class = new $className();
-            $action = $controller[1];
+        if ($this->autoRouting) {
+            if ('/' === $requestUri) {
+                $controller[self::CONTROLLER_INDEX] = 'IndexController';
+                $controller[self::ACTION_INDEX]     = 'index';
+            } else {
 
-            echo (string) $class->$action();
+                $unformattedRoute = explode('/', substr($requestUri, 1));
+
+                $controller[self::CONTROLLER_INDEX] = ucfirst($unformattedRoute[self::CONTROLLER_INDEX]) . 'Controller';
+
+                if (self::CONTROLLER_INDEX !== $unformattedRoute) {
+                    $controller[self::ACTION_INDEX] = $unformattedRoute[self::ACTION_INDEX];
+                }
+            }
         } else {
-            var_dump($requestUri);
-            echo 'route not found';
-            //throw new RouteException('route not found');
+            if (null !== $params = $this->match($requestUri)) {
+                $controller = explode('::', $params['controller']);
+            } else {
+                throw new BadUrlException('route not found');
+            }
         }
+
+        $className = '\\App\\Controller\\' . $controller[self::CONTROLLER_INDEX];
+        $class     = new $className();
+        $action    = $controller[self::ACTION_INDEX];
+
+        echo (string) $class->$action();
     }
 }
