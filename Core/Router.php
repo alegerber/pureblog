@@ -7,8 +7,10 @@ namespace Core;
 class Router
 {
 
-    private const CONTROLLER_INDEX = 0;
-    private const ACTION_INDEX     = 1;
+    private const CONTROLLER_INDEX   = 0;
+    private const ACTION_INDEX       = 1;
+    private const DEFAULT_CONTROLLER = 'IndexController';
+    private const DEFAULT_ACTION     = 'index';
 
     /**
      * @var Router
@@ -102,25 +104,25 @@ class Router
 
         if ($this->autoRouting) {
             if ('/' === $requestUri) {
-                $controller[self::CONTROLLER_INDEX] = 'IndexController';
-                $controller[self::ACTION_INDEX]     = 'index';
+                $controller[self::CONTROLLER_INDEX] = self::DEFAULT_CONTROLLER;
+                $controller[self::ACTION_INDEX]     = self::DEFAULT_ACTION;
             } else {
-
                 $unformattedRoute = explode('/', substr($requestUri, 1));
 
                 $controller[self::CONTROLLER_INDEX] = ucfirst($unformattedRoute[self::CONTROLLER_INDEX]) . 'Controller';
 
-                if (self::CONTROLLER_INDEX !== $unformattedRoute) {
+                if (self::CONTROLLER_INDEX === $unformattedRoute) {
+                    $controller[self::ACTION_INDEX] = self::DEFAULT_ACTION;
+                } else {
                     $controller[self::ACTION_INDEX] = $unformattedRoute[self::ACTION_INDEX];
                 }
             }
-        } else {
-            if (null !== $params = $this->match($requestUri)) {
+        } else if (null !== $params = $this->match($requestUri)) {
                 $controller = explode('::', $params['controller']);
-            } else {
-                throw new \BadFunctionCallException('route not found');
-            }
+        } else {
+            throw new \BadFunctionCallException('route not found');
         }
+
 
         $className = '\\App\\Controller\\' . $controller[self::CONTROLLER_INDEX];
         $class     = new $className();
