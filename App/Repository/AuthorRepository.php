@@ -7,54 +7,8 @@ use App\Model\Author;
 
 class AuthorRepository extends Repository
 {
-    /**
-     * {@inheritDoc}
-     */
-    public function find(int $id): ?Author
-    {
-        $database = Database::getInstance();
-        try {
-            $statement = $database->prepare('SELECT * FROM `author` WHERE `id` = :id');
-            $statement->execute([':id' => $id]);
-            $row = $statement->fetch();
 
-            $author = new Author();
-            $author->setName($row['name']);
-            $author->setEmail($row['email']);
-            $author->setPassword($row['password']);
-
-            return $author;
-        } catch (\PDOException $exception) {
-            return null;
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function findAll(): ?array
-    {
-        $database = Database::getInstance();
-
-        try {
-            $statement = $database->query('SELECT * FROM `author`');
-
-            $authors = [];
-
-            foreach ($statement->fetchAll() as $row){
-                $author = new Author();
-                $author->setName($row['name']);
-                $author->setEmail($row['email']);
-                $author->setPassword($row['password']);
-                $authors[] = $author;
-            }
-
-            return $authors;
-        } catch (\PDOException $exception) {
-            return null;
-        }
-    }
-
+    public const MODEL = Author::class;
 
     /**
      * @param Author $author

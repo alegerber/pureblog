@@ -3,9 +3,13 @@
 namespace App\Repository;
 
 use Core\Database;
+use ReflectionClass;
 
 abstract class Repository
 {
+    /** @var string */
+    public const MODEL = '';
+
     public function beginTransaction(): void
     {
         $database = Database::getInstance();
@@ -27,13 +31,77 @@ abstract class Repository
     /**
      * find by id
      * @param int $id
-     * @return mixed
+     * @return null|Repository
      */
-    abstract public function find(int $id);
+    public function find(int $id): ?Repository
+    {
+        $database = Database::getInstance();
+
+        try {
+            $statement = $database->prepare('SELECT * FROM `' . self::MODEL . '` WHERE `id` = :id');
+            $statement->execute([':id' => $id]);
+            $row = $statement->fetch();
+
+            return $this->fillModel($row);
+        } catch (\PDOException $exception) {
+            return null;
+        }
+    }
 
     /**
      * find all
      * @return mixed
      */
-    abstract public function findAll();
+    public function findAll(): ?Repository
+    {
+        $database = Database::getInstance();
+
+        try {
+            $statement = $database->prepare('SELECT * FROM `' . self::MODEL . '`');
+            $rows = $statement->fetch();
+            $models = [];
+
+            foreach ($rows as $row){
+                $models = $this->fillModel($row);
+            }
+
+            return $models;
+        } catch (\PDOException $exception) {
+            return null;
+        }
+    }
+
+    /**
+     * @param string $needle
+     * @return array
+     * @throws \ReflectionException
+     */
+    private function getModelMethods(string $needle): array
+    {
+        $reflectionClass = new \ReflectionClass(self::MODEL);
+        $methods = [];
+
+        foreach ($reflectionClass->getMethods() as $method) {
+            if (strpos($method->getName(), $needle) === 0) {
+                $methods[$method->getName()] = strtolower(str_replace($needle, '', $method->getName()));
+            }
+        }
+
+        return $methods;
+    }
+
+    /**
+     * @param array $row
+     * @return Repository
+     * @throws \ReflectionException
+     */
+    private function fillModel(array $row): Repository
+    {   $className = self::MODEL;
+        $class     = new $className();
+
+        foreach ($this->getModelMethods('set') as $methodName => $propertyName) {
+            $class->$methodName($row[$propertyName]);
+        }
+    }
+
 }

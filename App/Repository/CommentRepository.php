@@ -7,56 +7,6 @@ use App\Model\Comment;
 
 class CommentRepository extends Repository
 {
-    /**
-     * {@inheritDoc}
-     */
-    public function find(int $id): ?Comment
-    {
-        $database = Database::getInstance();
-
-        try {
-            $statement = $database->prepare('SELECT * FROM `comment` WHERE `id` = :id');
-            $statement->execute([':id' => $id]);
-            $row = $statement->fetch();
-
-            $comment = new Comment();
-            $comment->setAuthor($row['author']);
-            $comment->setAuthorEmail($row['author_email']);
-            $comment->setBody($row['body']);
-
-            return $comment;
-        } catch (\PDOException $exception) {
-            return null;
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function findAll(): ?array
-    {
-        $database = Database::getInstance();
-
-        try {
-            $statement = $database->query('SELECT * FROM `comment`');
-
-            $comments = [];
-
-            foreach ($statement->fetchAll() as $row){
-                $comment = new Comment();
-                $comment->setAuthor($row['author']);
-                $comment->setAuthorEmail($row['author_email']);
-                $comment->setBody($row['body']);
-                $comments[] = $comment;
-            }
-
-            return $comments;
-
-        } catch (\PDOException $exception) {
-            return null;
-        }
-    }
-
     public function findById(array $ids): ?array
     {
         $database = Database::getInstance();
