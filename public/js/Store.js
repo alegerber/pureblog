@@ -4,17 +4,25 @@ class Store {
     constructor() {
         this.store = null;
         this.storeName = '';
+        this.storage = null;
     }
 
     /**
      * @param storeName
+     * @param storage
      * @returns {Store}
      */
-    createStore(storeName) {
+    createStore(storeName, storage) {
         this.store = {};
         this.storeName = storeName;
 
-        localStorage.setItem(this.storeName, JSON.stringify(this.store));
+        if (typeof storage === 'undefined') {
+            this.storage = storage;
+        } else {
+            this.storage = localStorage;
+        }
+
+        this.storage.setItem(this.storeName, JSON.stringify(this.store));
 
         return this
     }
@@ -26,7 +34,7 @@ class Store {
     initStore(storeName) {
         this.storeName = storeName;
 
-        const json = localStorage.getItem(storeName);
+        const json = this.storage.getItem(storeName);
 
         if (json !== null) {
             this.store = JSON.parse(json);
@@ -43,7 +51,7 @@ class Store {
     addItem(itemName, itemValue) {
         if (typeof this.store.itemName === 'undefined') {
             this.store.itemName = itemValue;
-            localStorage.setItem(this.storeName, JSON.stringify(this.store));
+            this.storage.setItem(this.storeName, JSON.stringify(this.store));
         }
 
         return this
@@ -57,7 +65,7 @@ class Store {
     setItem(itemName, itemValue) {
         if (typeof this.store.itemName !== 'undefined') {
             this.store.itemName = itemValue;
-            localStorage.setItem(this.storeName, JSON.stringify(this.store));
+            this.storage.setItem(this.storeName, JSON.stringify(this.store));
         }
 
         return this
