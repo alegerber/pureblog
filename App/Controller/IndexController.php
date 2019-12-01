@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Controller;
 
@@ -13,19 +15,7 @@ class IndexController
      */
     public function index(): Response
     {
-        $html = '
-            <!DOCTYPE html>
-            <html lang="de">
-            <head>
-                <meta charset="UTF-8">
-                <title>Home</title>
-                <link rel="stylesheet" type="text/css" href="css/base.css">
-                <script type="text/javascript" src="js/base.js"></script>
-            </head>
-            <body>
-            </body>
-            </html>
-        ';
+        $html = file_get_contents(__DIR__ . '/../views/index.html');
 
         return new Response($html);
     }
