@@ -49,6 +49,36 @@ abstract class Repository
     }
 
     /**
+     * find by id
+     * @param array $ids
+     * @return null|Repository
+     */
+    public function findByIds(array $ids): ?Repository
+    {
+        $database = Database::getInstance();
+
+        try {
+            $sql = 'SELECT * FROM `' . self::MODEL . '` WHERE `id` IN (';
+            foreach ($ids as $id) {
+                $sql .= $id . ',';
+            }
+            substr($sql, 0, -1);
+            $sql .= ')';
+
+            $statement = $database->query($sql);
+            $models = [];
+
+            foreach ($statement->fetchAll() as $row){
+                $models = $this->fillModel($row);
+            }
+
+            return $models;
+        } catch (\PDOException $exception) {
+            return null;
+        }
+    }
+
+    /**
      * find all
      * @return mixed
      */
@@ -58,10 +88,9 @@ abstract class Repository
 
         try {
             $statement = $database->prepare('SELECT * FROM `' . self::MODEL . '`');
-            $rows = $statement->fetch();
             $models = [];
 
-            foreach ($rows as $row){
+            foreach ($statement->fetchAll() as $row){
                 $models = $this->fillModel($row);
             }
 
