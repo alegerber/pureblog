@@ -16,15 +16,22 @@ class Ajax {
     }
 
     /**
+     * @param target
      * @param callback
      */
-    get(callback) {
+    get(target, callback) {
         this.xhttp = new XMLHttpRequest();
         this.xhttp.open('GET', this.url, this.async);
 
-        if(typeof callback !== 'undefined') {
-            this.xhttp.onload = callback;
-        }
+        this.xhttp.onload = function () {
+            if(typeof target !== 'undefined' || target === null) {
+                target = this.xhttp.responseText;
+            }
+
+            if(typeof callback !== 'undefined') {
+                callback(this);
+            }
+        };
 
         this.xhttp.send();
     }
@@ -32,16 +39,23 @@ class Ajax {
     /**
      * @param string
      * @param contentType
+     * @param target
      * @param callback
      */
-    post(string, contentType, callback) {
+    post(string, contentType, target, callback) {
         this.xhttp = new XMLHttpRequest();
         this.xhttp.open('POST', this.url, this.async);
         this.setRequestHeader(contentType);
 
-        if(typeof callback !== 'undefined') {
-            this.xhttp.onload = callback;
-        }
+        this.xhttp.onload = function () {
+            if(typeof target !== 'undefined' || target === null) {
+                target = this.xhttp.responseText;
+            }
+
+            if(typeof callback !== 'undefined') {
+                callback(this);
+            }
+        };
 
         this.xhttp.send(string);
     }
@@ -49,26 +63,44 @@ class Ajax {
     /**
      * @param string
      * @param contentType
+     * @param target
      * @param callback
      */
-    put(string, contentType, callback) {
+    put(string, contentType, target, callback) {
         this.xhttp = new XMLHttpRequest();
         this.xhttp.open('PUT', this.url, this.async);
         this.setRequestHeader(contentType);
 
-        if(typeof callback !== 'undefined') {
-            this.xhttp.onload = callback;
-        }
+        this.xhttp.onload = function () {
+            if(typeof target !== 'undefined' || target === null) {
+                target = this.xhttp.responseText;
+            }
+
+            if(typeof callback !== 'undefined') {
+                callback(this);
+            }
+        };
 
         this.xhttp.send(string);
     }
-    delete(callback) {
+
+    /**
+     * @param target
+     * @param callback
+     */
+    delete(target, callback) {
         this.xhttp = new XMLHttpRequest();
         this.xhttp.open('DELETE', this.url, this.async);
 
-        if(typeof callback !== 'undefined') {
-            this.xhttp.onload = callback;
-        }
+        this.xhttp.onload = function () {
+            if(typeof target !== 'undefined' || target === null) {
+                target = this.xhttp.responseText;
+            }
+
+            if(typeof callback !== 'undefined') {
+                callback(this);
+            }
+        };
 
         this.xhttp.send();
     }
