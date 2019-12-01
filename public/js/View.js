@@ -12,11 +12,10 @@ class View {
     blog() {
         const store = new Store();
         store.createStore('blogItem', localStorage);
-        const ajaxHtml = new Ajax('/views/blog/post.html');
-        ajaxHtml.get(function (xhttp) {
+        this.ajax.get('/post', function (xhttp) {
+            store.addItem('blogJson', xhttp.responseText)
         });
-        const ajaxJson = new Ajax('/post/');
-        ajax.get(function (xhttp) {
+        this.ajax.get('/views/blog/post.html', function (xhttp) {
             document.body.main.innerHTML = xhttp.responseText;
         });
     }
