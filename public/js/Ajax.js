@@ -1,9 +1,16 @@
 "use strict";
 
 class Ajax {
+    /**
+     * @param url
+     */
     constructor(url) {
         this.url = url;
     }
+
+    /**
+     * @param callback
+     */
     get(callback) {
         this.xhttp = new XMLHttpRequest();
         this.xhttp.open('GET', this.url, true);
@@ -14,6 +21,12 @@ class Ajax {
 
         this.xhttp.send();
     }
+
+    /**
+     * @param string
+     * @param contentType
+     * @param callback
+     */
     post(string, contentType, callback) {
         this.xhttp = new XMLHttpRequest();
         this.xhttp.open('POST', this.url, true);
@@ -25,6 +38,12 @@ class Ajax {
 
         this.xhttp.send(string);
     }
+
+    /**
+     * @param string
+     * @param contentType
+     * @param callback
+     */
     put(string, contentType, callback) {
         this.xhttp = new XMLHttpRequest();
         this.xhttp.open('PUT', this.url, true);
@@ -47,6 +66,9 @@ class Ajax {
         this.xhttp.send();
     }
 
+    /**
+     * @param contentType
+     */
     setRequestHeader(contentType) {
         switch(contentType) {
             case 'text':
