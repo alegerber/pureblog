@@ -2,7 +2,7 @@
 
 namespace App\Repository;
 
-use App\Core\Database;
+use Core\Database;
 use App\Model\Post;
 
 class PostRepository extends Repository
@@ -10,7 +10,7 @@ class PostRepository extends Repository
     /**
      * {@inheritDoc}
      */
-    public function find(int $id): Post
+    public function find(int $id): ?Post
     {
         $database = Database::getInstance();
 
@@ -46,7 +46,7 @@ class PostRepository extends Repository
     /**
      * {@inheritDoc}
      */
-    public function findAll(): array
+    public function findAll(): ?array
     {
         $database = Database::getInstance();
 
@@ -86,7 +86,7 @@ class PostRepository extends Repository
      * @param Post $post
      * @return array
      */
-    public function new(Post $post): array
+    public function new(Post $post): ?array
     {
         $database = Database::getInstance();
 
@@ -121,7 +121,7 @@ class PostRepository extends Repository
      * @param Post $post
      * @return array
      */
-    public function update(Post $post): array
+    public function update(Post $post): ?array
     {
         $database = Database::getInstance();
 
@@ -163,7 +163,7 @@ class PostRepository extends Repository
      * @param Post $post
      * @return array
      */
-    public function delete(Post $post): array
+    public function delete(Post $post): ?array
     {
         $database = Database::getInstance();
 

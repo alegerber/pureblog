@@ -2,7 +2,7 @@
 
 namespace App\Repository;
 
-use App\Core\Database;
+use Core\Database;
 use App\Model\Author;
 
 class AuthorRepository extends Repository
@@ -10,7 +10,7 @@ class AuthorRepository extends Repository
     /**
      * {@inheritDoc}
      */
-    public function find(int $id): Author
+    public function find(int $id): ?Author
     {
         $database = Database::getInstance();
         try {
@@ -32,7 +32,7 @@ class AuthorRepository extends Repository
     /**
      * {@inheritDoc}
      */
-    public function findAll(): array
+    public function findAll(): ?array
     {
         $database = Database::getInstance();
 
@@ -60,7 +60,7 @@ class AuthorRepository extends Repository
      * @param Author $author
      * @return array
      */
-    public function new(Author $author): array
+    public function new(Author $author): ?array
     {
         $database = Database::getInstance();
 
@@ -83,7 +83,7 @@ class AuthorRepository extends Repository
      * @param Author $author
      * @return array
      */
-    public function update(Author $author): array
+    public function update(Author $author): ?array
     {
         $database = Database::getInstance();
 
@@ -107,7 +107,7 @@ class AuthorRepository extends Repository
      * @param Author $author
      * @return array
      */
-    public function delete(Author $author): array
+    public function delete(Author $author): ?array
     {
         $database = Database::getInstance();
 

@@ -2,7 +2,7 @@
 
 namespace App\Repository;
 
-use App\Core\Database;
+use Core\Database;
 
 abstract class Repository
 {
