@@ -112,6 +112,7 @@ abstract class Repository
 
         foreach ($reflectionClass->getMethods() as $method) {
             if (strpos($method->getName(), $needle) === 0) {
+                // @TODO id & ids
                 $methods[$method->getName()] = strtolower(str_replace($needle, '', $method->getName()));
             }
         }
