@@ -2,11 +2,10 @@
 
 class Ajax {
     /**
-     * @param url
      * @param async
      */
-    constructor(url, async) {
-        this.url = url;
+    constructor(async) {
+        this.xhttp = new XMLHttpRequest();
 
         if(typeof async === 'undefined') {
             this.async = true;
@@ -16,11 +15,11 @@ class Ajax {
     }
 
     /**
+     * @param url
      * @param callback
      */
-    get(callback) {
-        this.xhttp = new XMLHttpRequest();
-        this.xhttp.open('GET', this.url, this.async);
+    get(url, callback) {
+        this.xhttp.open('GET', url, this.async);
 
         this.xhttp.onload = function () {
             if(typeof callback !== 'undefined') {
@@ -32,13 +31,13 @@ class Ajax {
     }
 
     /**
+     * @param url
      * @param string
      * @param contentType
      * @param callback
      */
-    post(string, contentType, callback) {
-        this.xhttp = new XMLHttpRequest();
-        this.xhttp.open('POST', this.url, this.async);
+    post(url, string, contentType, callback) {
+        this.xhttp.open('POST', url, this.async);
         this.setXhttpRequestHeader(contentType);
 
         this.xhttp.onload = function () {
@@ -51,13 +50,13 @@ class Ajax {
     }
 
     /**
+     * @param url
      * @param string
      * @param contentType
      * @param callback
      */
-    put(string, contentType, callback) {
-        this.xhttp = new XMLHttpRequest();
-        this.xhttp.open('PUT', this.url, this.async);
+    put(url, string, contentType, callback) {
+        this.xhttp.open('PUT', url, this.async);
         this.setXhttpRequestHeader(contentType);
 
         this.xhttp.onload = function () {
@@ -70,11 +69,12 @@ class Ajax {
     }
 
     /**
+     * @param url
+     * @param contentType
      * @param callback
      */
-    delete(target, callback) {
-        this.xhttp = new XMLHttpRequest();
-        this.xhttp.open('DELETE', this.url, this.async);
+    delete(url, contentType, callback) {
+        this.xhttp.open('DELETE', url, this.async);
         this.setXhttpRequestHeader(contentType);
 
         this.xhttp.onload = function () {
