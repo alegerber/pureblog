@@ -11,6 +11,8 @@ class AbstractTest
     {
         if ($expected === $actual) {
             echo 'Test Passed' . PHP_EOL;
+
+            return;
         }
 
         echo 'Test Failed' . PHP_EOL;

@@ -57,10 +57,9 @@ class SemanticConverter
         $matches = [];
         $result = '';
 
-        preg_match('/[A-Z][a-z]*/', $input, $matches);
+        preg_match_all('/[A-Z][a-z]*/', $input, $matches);
 
-        unset($matches[0]);
-
+        $matches = $matches[0];
 
         foreach ($matches as $match) {
             $result .= strtolower($match) . '_';
