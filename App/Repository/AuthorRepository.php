@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use Core\Database;
+use Core\Repository;
 use App\Model\Author;
 
 class AuthorRepository extends Repository
