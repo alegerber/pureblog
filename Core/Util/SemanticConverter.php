@@ -6,6 +6,10 @@ namespace Core\Util;
 
 class SemanticConverter
 {
+    /**
+     * @param string $input
+     * @return string
+     */
     public static function camelCaseToSnakeCase(string $input): string
     {
         $matches = [];
@@ -22,6 +26,11 @@ class SemanticConverter
         return substr($result,0,-1);
     }
 
+
+    /**
+     * @param string $input
+     * @return string
+     */
     public static function snakeCaseToCamelCase(string $input): string
     {
         $result = '';
@@ -33,6 +42,11 @@ class SemanticConverter
         return lcfirst($result);
     }
 
+
+    /**
+     * @param string $input
+     * @return string
+     */
     public static function pascalCaseToSnakeCase(string $input): string
     {
         $matches = [];
@@ -50,6 +64,11 @@ class SemanticConverter
         return substr($result,0,-1);
     }
 
+
+    /**
+     * @param string $input
+     * @return string
+     */
     public static function snakeCaseToPascalCase(string $input): string
     {
         $result = '';
