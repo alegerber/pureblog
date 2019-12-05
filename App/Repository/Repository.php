@@ -107,7 +107,7 @@ abstract class Repository
      */
     private function getModelMethods(string $needle): array
     {
-        $reflectionClass = new \ReflectionClass(self::MODEL);
+        $reflectionClass = new ReflectionClass(self::MODEL);
         $methods = [];
 
         foreach ($reflectionClass->getMethods() as $method) {
