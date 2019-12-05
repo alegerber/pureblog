@@ -132,6 +132,8 @@ abstract class Repository
         foreach ($this->getModelMethods('set') as $methodName => $propertyName) {
             $class->$methodName($row[$propertyName]);
         }
+
+        return $class;
     }
 
 }
