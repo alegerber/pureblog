@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
 
-namespace App\Repository;
+namespace Core;
 
-use Core\Database;
+use Core\Util\SemanticConverter;
 use ReflectionClass;
 
 abstract class Repository
@@ -29,7 +29,6 @@ abstract class Repository
     }
 
     /**
-     * find by id
      * @param int $id
      * @return null|Repository
      */
@@ -49,11 +48,10 @@ abstract class Repository
     }
 
     /**
-     * find by id
      * @param array $ids
-     * @return null|Repository
+     * @return array|Repository[]
      */
-    public function findByIds(array $ids): ?Repository
+    public function findByIds(array $ids): array
     {
         $database = Database::getInstance();
 
@@ -69,20 +67,19 @@ abstract class Repository
             $models = [];
 
             foreach ($statement->fetchAll() as $row){
-                $models = $this->fillModel($row);
+                $models[] = $this->fillModel($row);
             }
 
             return $models;
         } catch (\PDOException $exception) {
-            return null;
+            return [];
         }
     }
 
     /**
-     * find all
-     * @return mixed
+     * @return array|Repository[]
      */
-    public function findAll(): ?Repository
+    public function findAll(): array
     {
         $database = Database::getInstance();
 
@@ -91,12 +88,12 @@ abstract class Repository
             $models = [];
 
             foreach ($statement->fetchAll() as $row){
-                $models = $this->fillModel($row);
+                $models[] = $this->fillModel($row);
             }
 
             return $models;
         } catch (\PDOException $exception) {
-            return null;
+            return [];
         }
     }
 
@@ -112,7 +109,6 @@ abstract class Repository
 
         foreach ($reflectionClass->getMethods() as $method) {
             if (strpos($method->getName(), $needle) === 0) {
-                // @TODO id & ids
                 $methods[$method->getName()] = lcfirst(str_replace($needle, '', $method->getName()));
             }
         }
@@ -126,8 +122,33 @@ abstract class Repository
      * @throws \ReflectionException
      */
     private function fillModel(array $row): Repository
-    {   $className = self::MODEL;
+    {
+        $className = self::MODEL;
         $class     = new $className();
+
+        foreach ($row as $key => $item) {
+            if (strpos($key, '_id') !== false) {
+                $subClassRepositoryName = SemanticConverter::snakeCaseToPascalCase(str_replace('_id', '', $key)) . __CLASS__;
+
+                /** @var self $subClassRepository */
+                $subClassRepository = new $subClassRepositoryName();
+
+                $row[$key] = $subClassRepository->find($item);
+            }
+        }
+
+        foreach ($row as $key => $item) {
+            if (strpos($key, '_ids') !== false) {
+                $subClassRepositoryName = SemanticConverter::snakeCaseToPascalCase(str_replace('_ids', '', $key)) . __CLASS__;
+
+                /** @var self $subClassRepository */
+                $subClassRepository = new $subClassRepositoryName();
+
+                $serializer = new Serializer(null, Serializer::ENCODER_JSON);
+
+                $row[$key] = $subClassRepository->findByIds($serializer->decode($item));
+            }
+        }
 
         foreach ($this->getModelMethods('set') as $methodName => $propertyName) {
             $class->$methodName($row[$propertyName]);
