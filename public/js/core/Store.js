@@ -5,14 +5,16 @@ class Store {
         this.store = null;
         this.storeName = '';
         this.storage = null;
+        this.ajax = null;
     }
 
     /**
      * @param storeName
      * @param storage
+     * @param autoloadUrl
      * @returns {Store}
      */
-    createStore(storeName, storage) {
+    createStore(storeName, storage, autoloadUrl) {
         this.store = {};
         this.storeName = storeName;
 
@@ -22,7 +24,17 @@ class Store {
             this.storage = localStorage;
         }
 
-        this.storage.setItem(this.storeName, JSON.stringify(this.store));
+        if (typeof autoloadUrl !== 'undefined') {
+            this.ajax = new Ajax(false);
+            this.ajax.tempObject = this;
+            this.ajax.get(autoloadUrl, function (xhttp) {
+                xhttp.tempObject.store = JSON.parse(xhttp.responseText);
+
+                xhttp.tempObject.storage.setItem(xhttp.tempObject.storeName, JSON.stringify(xhttp.tempObject.store));
+            });
+        } else {
+            this.storage.setItem(this.storeName, JSON.stringify(this.store));
+        }
 
         return this
     }

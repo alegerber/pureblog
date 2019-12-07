@@ -12,6 +12,8 @@ class Ajax {
         } else {
             this.async = async;
         }
+
+        this.tempObject = null;
     }
 
     /**
