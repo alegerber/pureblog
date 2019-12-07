@@ -8,29 +8,6 @@ use App\Model\Comment;
 
 class CommentRepository extends Repository
 {
-    public function findById(array $ids): ?array
-    {
-        $database = Database::getInstance();
-
-        try {
-            $statement = $database->query('SELECT * FROM `comment`');
-
-            $comments = [];
-
-            foreach ($statement->fetchAll() as $row){
-                $comment = new Comment();
-                $comment->setAuthor($row['author']);
-                $comment->setAuthorEmail($row['author_email']);
-                $comment->setBody($row['body']);
-                $comments[] = $comment;
-            }
-
-            return $comments;
-        } catch (\PDOException $exception) {
-            return null;
-        }
-    }
-
     /**
      * @param Comment $comment
      * @return array
