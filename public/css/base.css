@@ -1,0 +1,32 @@
+
+h1 {
+    margin: 5px;
+    text-align: center;
+}​
+
+h2 {
+    margin: 5px;
+    text-align: center;
+}​
+
+h3 {
+    margin: 5px;
+    text-align: center;
+}​
+
+h4 {
+    margin: 5px;
+    text-align: center;
+}
+
+btn.a {
+    color: black;
+    background-color: white;
+    border: 2px solid black;
+    text-align: center;
+}
+
+​p {
+    margin: 20px;
+    text-align: center;
+}​
