@@ -17,10 +17,6 @@ class PostController
     {
         $postRepository = new PostRepository();
 
-        //return new JsonResponse($postRepository->findAll());
-
-        $post = new Post();
-
         return new JsonResponse($postRepository->findAll());
     }
 }
