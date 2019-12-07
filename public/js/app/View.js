@@ -13,7 +13,7 @@ class View {
         const store = new Store();
         store.createStore('blogItem', localStorage);
         this.ajax.get('/views/blog/post.html', function (xhttp) {
-            document.body.main.innerHTML = xhttp.responseText;
+            document.getElementsByTagName('main').innerHTML = xhttp.responseText;
         });
     }
 }
